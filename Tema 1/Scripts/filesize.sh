@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if test $# -lt 2
+if test $# -lt 1
 then
     echo "Error. Uso $0 dir [fichero1] [fichero2] [...]" >&2
     exit 1
@@ -12,4 +12,18 @@ then
     exit 1
 fi
 
-for i
+DIR=$1
+shift
+
+for FILE in $@
+do
+    if test -f $FILE
+    then
+        du -b $FILE
+    elif test -f $DIR/$FILE
+    then
+        du -b $DIR/$FILE
+    else
+        echo "El fichero '$FILE' no existe ni en su ruta ni en '$DIR'."
+    fi
+done
