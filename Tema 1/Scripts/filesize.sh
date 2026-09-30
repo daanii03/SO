@@ -17,8 +17,7 @@ i=0
 cd $DIR
 for FILE in $@
 do
-    echo $FILE
-    if test $i -gt 1
+    if test $i -gt 0
     then
         if test -f $FILE
         then
