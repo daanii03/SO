@@ -17,7 +17,7 @@ USERS=$(ls /home)
 for USER in $USERS
 do
     cd /home/$USER
-    if test -z $(find /home/$USER -type f -name "practica.c")
+    if test -f practica.c
     then
         echo "$USER no tiene practica.c" > error.txt
     fi 
