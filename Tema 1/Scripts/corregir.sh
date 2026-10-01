@@ -2,7 +2,7 @@
 
 if test $# -ne 1
 then
-    echo "Error: Uso $0 fichero_entrada.txt"
+    echo "Error: Uso $0 fichero_entrada.txt" >&2
     exit 1
 fi
 
@@ -17,15 +17,15 @@ USERS=$(ls /home)
 for USER in $USERS
 do
     cd /home/$USER
-    if test -f practica.c
+    if ! test -f practica.c
     then
         echo "$USER no tiene practica.c" > error.txt
-    fi 
-
-    gcc practica.c -o practica 2> error.txt
-    if test -f practica
-    then
-        ./practica < $INPUT > salida.txt 2> error.txt
-        rm practica
+    else
+        gcc practica.c -o practica 2> error.txt
+        if test -f practica
+        then
+            ./practica < $INPUT > salida.txt 2> error.txt
+            rm practica
+        fi
     fi
 done

@@ -2,13 +2,13 @@
 
 if test $# -lt 1 -o $# -gt 2
 then
-    echo "Error: Uso $0 entrada.txt [salida.txt]"
+    echo "Error: Uso $0 entrada.txt [salida.txt]" >&2
     exit 1
 fi
 
-if ! test -e $1
+if ! test -f $1
 then
-    echo "El fichero de entrada no existe."
+    echo "El fichero de entrada no existe o no es un fichero regular." >&2
     exit 2
 fi 
 
@@ -19,15 +19,10 @@ else
     OUTPUT_FILE=default.txt
 fi
 
-echo "Apartado a:" >> $OUTPUT_FILE
-for LINE in $(sort $1)
-do
-    echo $LINE | cut -d ';' -f 2,3 >> $OUTPUT_FILE
-    
-done
+# Apartado a: ordenar por primer apellido (columna 2), mostrar apellido y nota
+echo "Apartado a:" > $OUTPUT_FILE
+sort -t ';' -k 2 $1 | cut -d ';' -f 2,3 >> $OUTPUT_FILE
 
+# Apartado b: ordenar por nota (columna 3) de menor a mayor, mostrar solo nota
 echo "Apartado b:" >> $OUTPUT_FILE
-for LINEB in $(sort -n $1)
-do
-    echo $LINEB | cut -d ';' -f 3 >> $OUTPUT_FILE
-done
+sort -t ';' -k 3 -n $1 | cut -d ';' -f 3 >> $OUTPUT_FILE
