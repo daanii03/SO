@@ -1,42 +1,51 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <string.h>
-#include <errno.h>
 #include <sys/wait.h>
+
+
 
 int main(int argc, char * argv[]){
 
-    pid_t pid;
     int status;
+    int status_code;
+    char * *p;
+    pid_t pid;
 
-    if(argc < 2){
-        printf("Error");
+    if (argc < 2){
+
+        printf("Error. Número de argumentos insuficientes. Actual: %d\n", argc);
         return 1;
     }
-
+    
     pid = fork();
 
-    
     if (pid < 0){
-        fprintf(stderr, "Fallo el fork %s \n", strerror(errno));
-        exit(-1);
+
+        printf("Error al crear el proceso hijo\n");
+        return 1;
     }
     else if (pid == 0){
-        execvp(argv[1], argv+1  );
-        /*Si llega aqui es que ha ocurrido un error*/
-        printf("Error al ejecutar el comando: %s\n", strerror(errno));
-        exit(1);
+
+        p = &argv[1];
+        status_code = execvp(argv[1],p);
+
+        printf("Error al ejecutar el comando %s\n", argv[1]);
+        exit(status_code);
     }
     else{
+        
         wait(&status);
-        if(WIFEXITED(status) != 0){
-            if(WEXITSTATUS(status) != 0){
-                printf("El comando no se ejecuto correctamente\n");
-            }
+
+        if (!WIFEXITED(status) || WEXITSTATUS(status) != 0){
+
+            printf("El comando no se ha ejecutado correctamente\n");
+            return 1;
         }
-        exit(0);
-    }
-    
+        }
+
+    return 0;
+
 
 }
