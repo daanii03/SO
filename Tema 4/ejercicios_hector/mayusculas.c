@@ -4,7 +4,6 @@
 #include <signal.h>
 #include <stdio.h>
 #include <signal.h>
-#include <stdlib.h>
 #include <sys/wait.h>
 
 int main(int argc, char * argv[]){
@@ -52,7 +51,7 @@ int main(int argc, char * argv[]){
         
         close(pipe_son[1]);
         dad_read = fdopen(pipe_son[0],"r");
-        
+
         while(fgets(buffer, sizeof buffer, stdin) != NULL){
             fputs(buffer, dad_write); //Copia el valor del buffer dentro de la entrada de escritura de la pipe.
             fflush(dad_write); //Enviamos el mensaje.            
@@ -61,8 +60,9 @@ int main(int argc, char * argv[]){
             fgets(buffer, sizeof buffer, dad_read);
             fputs(buffer,stdout);
         }
-
-      wait(NULL);
+    
+        close(pipe_dad[1]);
+        wait(NULL);
         
     }
 
